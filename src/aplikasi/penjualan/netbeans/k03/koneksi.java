@@ -33,6 +33,9 @@ public class koneksi {
         }
         return koneksi;
     }
+    public static void main(String args[]){
+        getkoneksi();
+    }
 }
 
     
