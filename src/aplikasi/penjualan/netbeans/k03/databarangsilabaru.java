@@ -46,6 +46,7 @@ private DefaultTableModel model;
     public void setEnnabledfalse(){
         txtkdbarang.setEnabled(false);
         txtnmbarang.setEnabled(false);
+        cmbkdjenis.setEnabled(false);
         txtjenis.setEnabled(false);
         txtharganet.setEnabled(false);
         txthargajual.setEnabled(false);
@@ -61,6 +62,7 @@ private DefaultTableModel model;
     public void setEnnabledtrue(){
         txtkdbarang.setEnabled(true);
         txtnmbarang.setEnabled(true);
+        cmbkdjenis.setEnabled(true);
         txtjenis.setEnabled(true);
         txtharganet.setEnabled(true);
         txthargajual.setEnabled(true);
@@ -208,6 +210,11 @@ private DefaultTableModel model;
         });
 
         btnclose.setText("close");
+        btnclose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncloseActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Rp");
 
@@ -417,12 +424,29 @@ private DefaultTableModel model;
         String namabarang = tbldatabarang.getValueAt(baris, 1).toString();
         txtnmbarang.setText(namabarang);
         cmbkdjenis.setSelectedItem(tbldatabarang.getValueAt(baris, 2).toString());
-        String harganet = tbldatabarang.getValueAt(baris, 3).toString();
+        String jenis = tbldatabarang.getValueAt(baris, 3).toString();
+        txtjenis.setText(jenis);
+        String harganet = tbldatabarang.getValueAt(baris, 4).toString();
         txtharganet.setText(harganet);
-        String hargajual = tbldatabarang.getValueAt(baris, 4).toString();
+        String hargajual = tbldatabarang.getValueAt(baris, 5).toString();
         txthargajual.setText(hargajual);
-        String stok = tbldatabarang.getValueAt(baris, 5).toString();
+        String stok = tbldatabarang.getValueAt(baris, 6).toString();
         txtstok.setText(stok);
+        
+        btnaddnew.setEnabled(false);
+        btnsave.setEnabled(false);
+        btnupdate.setEnabled(true);
+        btndelete.setEnabled(true);
+        btncancel.setEnabled(true);
+        btnclose.setEnabled(true);
+        txtkdbarang.setEnabled(true);
+        txtnmbarang.setEnabled(true);
+        cmbkdjenis.setEnabled(true);
+        txtjenis.setEnabled(true);
+        txtharganet.setEnabled(true);
+        txthargajual.setEnabled(true);
+        txtstok.setEnabled(true);
+        
     }//GEN-LAST:event_tbldatabarangMouseClicked
 
     private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
@@ -444,17 +468,17 @@ private DefaultTableModel model;
        try{
            Connection c= koneksi.getkoneksi();
            
-           String sql ="UPDATE tblbarang SET NamaBarang =?, KodeJenis=?, Jenis=?, HargaNet=?, HargaJual=?, Stok=? WHERE KodeBarang=?";
+           String sql ="UPDATE tblbarang SET NamaBarang =?, KodeJenis=?, JenisBarang=?, HargaNet=?, HargaJual=?, Stok=? WHERE KodeBarang=?";
            
            PreparedStatement p =c.prepareStatement(sql);
            
            p.setString(1, namabarang);
            p.setString(2, kj);
-           p.setString(2, jenis);
-           p.setString(3, harganet);
-           p.setString(4, hargajual);
-           p.setString(5, stok);
-           p.setString(6, kodebarang);
+           p.setString(3, jenis);
+           p.setString(4, harganet);
+           p.setString(5, hargajual);
+           p.setString(6, stok);
+           p.setString(7, kodebarang);
            
            p.executeUpdate();
            p.close();
@@ -513,6 +537,10 @@ private DefaultTableModel model;
         }
     }//GEN-LAST:event_cmbkdjenisItemStateChanged
 
+    private void btncloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncloseActionPerformed
+        dispose();
+    }//GEN-LAST:event_btncloseActionPerformed
+
      private void loadData(){
         model = new DefaultTableModel();
         model.getDataVector().removeAllElements();
@@ -539,7 +567,7 @@ private DefaultTableModel model;
             model.addRow(new Object[]{
             r.getString(1),
             r.getString(2),
-            r.getDate(3),
+            r.getString(3),
             r.getString(4),
             r.getString(5),
             r.getString(6),

@@ -3,20 +3,52 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package aplikasi.penjualan.netbeans.k03;
-
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
 /**
  *
  * @author RnD01
  */
 public class jenisbarangsila2 extends javax.swing.JFrame {
-
+private DefaultTableModel model;
     /**
      * Creates new form jenisbarangsila2
      */
     public jenisbarangsila2() {
         initComponents();
+        loadData();
+        kosong();
+        setEnnabledfalse();
     }
 
+    public void setEnnabledfalse(){
+        txtkdjenis.setEnabled(false);
+        txtjenis.setEnabled(false);
+        btnsave.setEnabled(false);
+        btnupdate.setEnabled(false);
+        btndelete.setEnabled(false);
+        btncancel.setEnabled(false);
+        btnclose.setEnabled(false);
+       
+    }
+    
+    public void setEnnabledtrue(){
+        txtkdjenis.setEnabled(true);
+        txtjenis.setEnabled(true);
+        btnsave.setEnabled(true);
+        btnupdate.setEnabled(true);
+        btndelete.setEnabled(true);
+        btncancel.setEnabled(true);
+        btnclose.setEnabled(true);
+        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +69,12 @@ public class jenisbarangsila2 extends javax.swing.JFrame {
         txtjenis = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbjenis = new javax.swing.JTable();
-        addnew = new javax.swing.JButton();
+        btnaddnew = new javax.swing.JButton();
+        btnsave = new javax.swing.JButton();
+        btnupdate = new javax.swing.JButton();
+        btndelete = new javax.swing.JButton();
+        btncancel = new javax.swing.JButton();
+        btnclose = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,9 +139,54 @@ public class jenisbarangsila2 extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbjenis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbjenisMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbjenis);
 
-        addnew.setText("addnew");
+        btnaddnew.setText("addnew");
+        btnaddnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaddnewActionPerformed(evt);
+            }
+        });
+
+        btnsave.setText("save");
+        btnsave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsaveActionPerformed(evt);
+            }
+        });
+
+        btnupdate.setText("update");
+        btnupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnupdateActionPerformed(evt);
+            }
+        });
+
+        btndelete.setText("delete");
+        btndelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndeleteActionPerformed(evt);
+            }
+        });
+
+        btncancel.setText("cancel");
+        btncancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncancelActionPerformed(evt);
+            }
+        });
+
+        btnclose.setText("close");
+        btnclose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncloseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -126,8 +208,18 @@ public class jenisbarangsila2 extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(addnew)))
-                .addContainerGap(74, Short.MAX_VALUE))
+                        .addComponent(btnaddnew)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnsave)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnupdate)
+                        .addGap(18, 18, 18)
+                        .addComponent(btndelete)
+                        .addGap(18, 18, 18)
+                        .addComponent(btncancel)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnclose)))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,7 +235,13 @@ public class jenisbarangsila2 extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addComponent(addnew)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnaddnew)
+                    .addComponent(btnsave)
+                    .addComponent(btnupdate)
+                    .addComponent(btndelete)
+                    .addComponent(btncancel)
+                    .addComponent(btnclose))
                 .addContainerGap())
         );
 
@@ -168,6 +266,164 @@ public class jenisbarangsila2 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
+        int i =tbjenis.getSelectedRow();
+        
+        if(i == -1){
+            JOptionPane.showMessageDialog(this, "harap pilih data terlebih dahulu", "eror", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+       String kodejenis =(String)model.getValueAt(i, 0);
+       String jenis =txtjenis.getText();
+       
+       try{
+           Connection c= koneksi.getkoneksi();
+           
+           String sql ="UPDATE tblJenis SET Jenis=? WHERE KodeJenis=?";
+           
+           PreparedStatement p =c.prepareStatement(sql);
+           
+           p.setString(1, jenis);
+           p.setString(2, kodejenis);
+           
+           p.executeUpdate();
+           p.close();
+           JOptionPane.showMessageDialog(null, "ubah data berhsil");
+       }catch(SQLException e){
+           JOptionPane.showMessageDialog(null, "terjadi eror"+ e.getMessage());
+       }finally{
+           loadData();
+           kosong();
+       }
+    }//GEN-LAST:event_btnupdateActionPerformed
+
+    private void btnsaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsaveActionPerformed
+         String KodeJenis = txtkdjenis.getText();
+        String namajenis = txtjenis.getText();
+        
+        if ("".equals(KodeJenis) || "".equals(namajenis))
+            {
+        JOptionPane.showMessageDialog(this, "harap lengkapi data", "error", JOptionPane.WARNING_MESSAGE);
+        }else{
+        try{
+            Connection c = koneksi.getkoneksi();
+            String sql = "INSERT INTO tbljenis VALUES (?, ?)";
+            PreparedStatement P = c.prepareStatement(sql);
+            
+            P.setString(1, KodeJenis);
+            P.setString(2, namajenis);
+            
+            P.executeUpdate();
+            P.close();
+            
+            JOptionPane.showMessageDialog(null, "penyimpanan data berhasil");
+        }catch(SQLException e){
+        JOptionPane.showMessageDialog(this, e.getMessage());
+        }finally{
+        loadData();
+        kosong();
+        setEnnabledfalse();
+        btnaddnew.setEnabled(true);
+        }
+        } 
+    }//GEN-LAST:event_btnsaveActionPerformed
+
+    private void btncancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelActionPerformed
+        kosong();
+    }//GEN-LAST:event_btncancelActionPerformed
+
+    private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
+         int i = tbjenis.getSelectedRow();
+        
+        if(i == -1){
+            JOptionPane.showMessageDialog(this, "harap pilih data terlebih dahulu", "error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String KodeJenis = (String)model.getValueAt(i, 0);
+        
+        try{
+            Connection c = koneksi.getkoneksi();
+            String sql ="DELETE FROM tbljenis WHERE KodeJenis =?";
+            
+            PreparedStatement p = c.prepareStatement(sql);
+            p.setString(1, KodeJenis);
+            p.executeUpdate();
+            p.close();
+            
+            JOptionPane.showMessageDialog(null, "Hapus Data Berhasil");
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Terjadi Error" +e.getMessage());
+        } finally {
+        loadData();
+        kosong();
+        }
+    }//GEN-LAST:event_btndeleteActionPerformed
+
+    private void tbjenisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbjenisMouseClicked
+        int baris = tbjenis.getSelectedRow();
+        
+        if(baris == -1){
+        return;
+        }
+        String KodeJenis = tbjenis.getValueAt(baris, 0).toString();
+        txtkdjenis.setText(KodeJenis);
+        String namajenis = tbjenis.getValueAt(baris, 1).toString();
+        txtjenis.setText(namajenis);
+        
+        btnaddnew.setEnabled(false);
+        btnsave.setEnabled(false);
+        btnupdate.setEnabled(true);
+        btndelete.setEnabled(true);
+        btncancel.setEnabled(true);
+        btnclose.setEnabled(true);
+        txtkdjenis.setEnabled(true);
+        txtjenis.setEnabled(true);
+    }//GEN-LAST:event_tbjenisMouseClicked
+
+    private void btnaddnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddnewActionPerformed
+        setEnnabledtrue();
+        btnaddnew.setEnabled(false);
+    }//GEN-LAST:event_btnaddnewActionPerformed
+
+    private void btncloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncloseActionPerformed
+        dispose();
+    }//GEN-LAST:event_btncloseActionPerformed
+
+    private void loadData(){
+        model = new DefaultTableModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        
+        tbjenis.setModel(model);
+        model.addColumn("kode_jenis");
+        model.addColumn("nama_jenis");
+        
+        try{
+        
+            String sql = "SELECT * FROM tbljenis";
+            
+            Connection c = koneksi.getkoneksi();
+            Statement s = c .createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            while(r.next()){
+            model.addRow(new Object[]{
+            r.getString(1),
+            r.getString(2),
+            });
+            }
+            tbjenis.setModel(model);
+        }catch(SQLException e){
+        System.out.println("terjadi error");
+        }
+    }
+    
+    private void kosong(){
+        txtkdjenis.setText(null);
+        txtjenis.setText(null);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -204,7 +460,12 @@ public class jenisbarangsila2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addnew;
+    private javax.swing.JButton btnaddnew;
+    private javax.swing.JButton btncancel;
+    private javax.swing.JButton btnclose;
+    private javax.swing.JButton btndelete;
+    private javax.swing.JButton btnsave;
+    private javax.swing.JButton btnupdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
