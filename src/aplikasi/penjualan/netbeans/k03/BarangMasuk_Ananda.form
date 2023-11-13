@@ -316,14 +316,15 @@
         <Component class="javax.swing.JComboBox" name="KodeBarang">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="2">
+                <StringItem index="0" value="Pilih Kode Barang"/>
+                <StringItem index="1" value=" "/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="KodeBarangItemStateChanged"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -337,16 +338,28 @@
         <Component class="javax.swing.JTextField" name="Jumlah">
         </Component>
         <Component class="javax.swing.JTextField" name="SubTotal">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="0"/>
+          </Properties>
+          <Events>
+            <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="SubTotalCaretUpdate"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="Hitung">
           <Properties>
             <Property name="text" type="java.lang.String" value="Hitung"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HitungActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="AddItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Add Item"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddItemActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -357,14 +370,15 @@
     <Component class="javax.swing.JComboBox" name="IdDistributor">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
+          <StringArray count="2">
+            <StringItem index="0" value="pilih distributor"/>
+            <StringItem index="1" value=" "/>
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="IdDistributorItemStateChanged"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
@@ -406,6 +420,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Add New"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AddNewActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="save">
       <Properties>
@@ -419,6 +436,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Close"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel13">
       <Properties>
@@ -435,14 +455,14 @@
     <Component class="javax.swing.JComboBox" name="IdPetugas">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
+          <StringArray count="1">
+            <StringItem index="0" value="Pilih Petugas"/>
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="IdPetugasItemStateChanged"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>

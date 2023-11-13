@@ -286,7 +286,7 @@ public class from_Petugas extends javax.swing.JFrame {
             
             String sql = "SELECT * FROM tb_petugas";
             
-            Connection c = Koneksi.getKoneksi();
+            Connection c = koneksi.getkoneksi();
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery(sql);
             
@@ -322,7 +322,7 @@ public class from_Petugas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "harap lengkapi data","eror", JOptionPane.WARNING_MESSAGE);
          }else{
             try{ 
-                Connection c = Koneksi.getKoneksi();
+                Connection c = koneksi.getkoneksi();
                 String sql ="INSERT INTO tb_petugas VALUES(?,?,?,?,?)"; 
                 PreparedStatement p= c.prepareStatement(sql); 
                 p.setString(1, Id);
@@ -370,7 +370,7 @@ public class from_Petugas extends javax.swing.JFrame {
          String Telpon = txttelpon.getText();
          
          try{
-             Connection c = Koneksi.getKoneksi();
+             Connection c =  koneksi.getkoneksi();
              String sql = "UPDATE tb_siswa SET NAMA = ?, TANGGAL_LAHIR = ?, JURUSAN = ?, ALAMAT =? WHERE NIS";
              PreparedStatement p = c.prepareStatement(sql);
              
@@ -404,7 +404,7 @@ public class from_Petugas extends javax.swing.JFrame {
          String petugas = (String) model.getValueAt(i, 0);
          
          try{
-             Connection c = Koneksi.getKoneksi();
+             Connection c =  koneksi.getkoneksi();
              
              String sql = "DELETE tb_petugas WHERE NIS";
              
