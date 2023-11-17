@@ -411,6 +411,8 @@ private DefaultTableModel model;
 
     private void btncancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelActionPerformed
         kosong();
+        setEnnabledfalse();
+        btnaddnew.setEnabled(true);
     }//GEN-LAST:event_btncancelActionPerformed
 
     private void tbldatabarangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbldatabarangMouseClicked
