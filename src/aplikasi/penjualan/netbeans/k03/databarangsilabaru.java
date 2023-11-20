@@ -532,7 +532,7 @@ private DefaultTableModel model;
             ResultSet r = s.executeQuery(sql);
             
             r.absolute(1);
-            txtjenis.setText(r.getString("na"));
+            txtjenis.setText(r.getString("jenis"));
         }catch (SQLException ex) {
         }
     }//GEN-LAST:event_cmbkdjenisItemStateChanged
