@@ -124,6 +124,8 @@ private DefaultTableModel model;
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel3.setBackground(new java.awt.Color(51, 204, 0));
+
         jLabel3.setText("Kode Jenis");
 
         jLabel4.setText("Jenis ");
