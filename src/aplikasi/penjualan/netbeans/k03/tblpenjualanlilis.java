@@ -90,7 +90,7 @@ private DefaultTableModel model;
             ResultSet r = s.executeQuery(sql);
             
             while(r.next()){
-                cmbkd.addItem(r.getString("Kode barang"));
+                cmbkd.addItem(r.getString("KodeBarang"));
             }
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex);
