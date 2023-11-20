@@ -117,6 +117,8 @@ private DefaultTableModel model;
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(51, 204, 0));
+
         jPanel3.setBackground(new java.awt.Color(0, 0, 0));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -155,6 +157,9 @@ private DefaultTableModel model;
         jLabel8.setText("Harga Jual");
 
         jLabel9.setText("Stok");
+
+        txtjenis.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        txtjenis.setEnabled(false);
 
         tbldatabarang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
