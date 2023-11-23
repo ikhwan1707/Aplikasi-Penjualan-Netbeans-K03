@@ -1,8 +1,14 @@
 package aplikasi.penjualan.netbeans.k03;
-import javax.swing.*; 
-import java.awt.*; 
-import java.awt.event.*; 
-import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.awt.event.ActionEvent; 
 import java.util.Date;
 
 /*
@@ -10,20 +16,21 @@ import java.util.Date;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-
-
 /**
  *
  * @author SMKI Utama9
  */
 public final class BarangMasuk_Ananda extends javax.swing.JFrame {
-   
+   private DefaultTableModel model;
+   String data[] = new String[6];
     /**
      * Creates new form BarangMasuk_Ananda
      */
     public BarangMasuk_Ananda() {
         initComponents();
-        setDefaultTable(); 
+        model = (DefaultTableModel) table.getModel();
+        loadData();
+        Date date = new Date();
         SetEditOff(); 
         TanggalOtomatis(); 
         TampilComboBarang(); 
@@ -110,8 +117,18 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
                 KodeBarangItemStateChanged(evt);
             }
         });
+        KodeBarang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                KodeBarangActionPerformed(evt);
+            }
+        });
 
-        SubTotal.setText("0");
+        Stok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StokActionPerformed(evt);
+            }
+        });
+
         SubTotal.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 SubTotalCaretUpdate(evt);
@@ -252,6 +269,12 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
 
         jLabel13.setText("Total Rp");
 
+        Total.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TotalActionPerformed(evt);
+            }
+        });
+
         jLabel14.setText("ID Petugas");
 
         IdPetugas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pilih Petugas" }));
@@ -373,59 +396,63 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     
-   
-     
- 
-
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
-        // TODO add your handling code here:
-            String NM=NoNota.getText(); 
-         
-        if ((NM.isEmpty())) { 
-            JOptionPane.showMessageDialog(null,"data tidak boleh kosong, silahkan dilengkapi"); 
-            NoNota.requestFocus(); 
-        }else { 
-             
-            try { 
-                String driver = null;
-                Class.forName(driver); 
-                try (Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", "")){
-                    Statement  stt = kon.createStatement();
-                    String     SQL = "insert into tblbrgmasuk values('"+NoNota.getText()+"',"+ "'"+TglMasuk.getText()+"',"+ "'"+IdDistributor.getSelectedItem()+"',"+ "'"+IdPetugas.getSelectedItem()+"',"+
-                            "'"+Total.getText()+"')";
-                    
-                    
-                    stt.executeUpdate(SQL);
-                    stt.close();
-                } 
-                BersihData(); 
-                SetEditOff(); 
-                save.setEnabled(false); 
-            } catch (Exception ex) { 
-                System.err.println(ex.getMessage()); 
-            } 
-        } 
+        java.util.Date tglsekarang = new java.util.Date();
+        String nonota = NoNota.getText();
+        //String namapetugas = cmbptgs.getSelectedItem().toString();
+        String jumlah = Jumlah.getText();
+        String total = Total.getText();
+        String iddistributor = IdDistributor.getSelectedItem().toString();
+        String idpetugas = IdPetugas.getSelectedItem().toString();
+        //String KD = cmbkd.getSelectedItem().toString();
+        // ...
+        if (tglsekarang == null || nonota.isEmpty() || jumlah.isEmpty() || total.isEmpty() || iddistributor.isEmpty() || idpetugas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            try {
+                Connection c = koneksi.getkoneksi();
+                String sql = "INSERT INTO tblbrgmasuk ( nonota, tglmasuk, iddistributor, idpetugas, total) VALUES (?, ?, ?, ?, ?, ?)";
+                PreparedStatement p = c.prepareStatement(sql);
+
+                p.setString(1, nonota);
+                p.setDate(2, new java.sql.Date(tglsekarang.getTime()));
+                p.setString(3, iddistributor);
+                p.setString(4, idpetugas);
+                p.setString(5, jumlah);
+                p.setString(6, total);
+
+                p.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Berhasil ditambah");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            } finally {
+                 loadData(); 
+                 kosong(); 
+                 
+                 AddNew.setEnabled(true);
+            }
+        }   
     }//GEN-LAST:event_saveActionPerformed
 
     private void CariDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CariDataActionPerformed
         // TODO add your handling code here:
-                    try { 
-     Connection kon =  DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", "");
-     Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-     ResultSet.CONCUR_UPDATABLE); 
-     String     SQL = "SELECT * FROM tblbrgmasuk where nonota='"+NoNota.getText().toString()+"'"; 
-     ResultSet  res = stt.executeQuery(SQL); 
-     res.absolute(1); 
-     TglMasuk.setText(res.getString("tglmasuk")); 
-     IdPetugas.setSelectedItem(res.getString("idpetugas")); 
-     IdDistributor.setSelectedItem(res.getString("iddistributor")); 
-     Total.setText(res.getString("total")); 
-     TampilGridDetail(); 
-     save.setEnabled(false); 
-     NoNota.setEnabled(false); 
-     CariData.setEnabled(false); 
-             } catch (SQLException ex) { 
-        }  
+//                    try { 
+//     Connection kon =  DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", "");
+//     Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+//     ResultSet.CONCUR_UPDATABLE); 
+//     String     SQL = "SELECT * FROM tblbrgmasuk where nonota='"+NoNota.getText().toString()+"'"; 
+//     ResultSet  res = stt.executeQuery(SQL); 
+//     res.absolute(1); 
+//     TglMasuk.setText(res.getString("tglmasuk")); 
+//     IdPetugas.setSelectedItem(res.getString("idpetugas")); 
+//     IdDistributor.setSelectedItem(res.getString("iddistributor")); 
+//     Total.setText(res.getString("total")); 
+//     TampilGridDetail(); 
+//     save.setEnabled(false); 
+//     NoNota.setEnabled(false); 
+//     CariData.setEnabled(false); 
+//             } catch (SQLException ex) { 
+//        }  
 
     }//GEN-LAST:event_CariDataActionPerformed
 
@@ -435,51 +462,58 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void AddItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddItemActionPerformed
-        String NM=NoNota.getText(); 
-        String KB=KodeBarang.getSelectedItem().toString(); 
-        String JM=Jumlah.getText(); 
-         
-        if ((NM.isEmpty()) | (KB.isEmpty()) |(JM.isEmpty())) { 
-            JOptionPane.showMessageDialog(null,"data tidak boleh kosong, silahkan dilengkapi"); 
-            KodeBarang.requestFocus(); 
-        }else { 
-             
-            try { 
-                String driver = null;
-                Class.forName(driver); 
-                try (Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", "")){
-                    Statement  stt = kon.createStatement();
-                    String     SQL = "insert into tbldetailbrgmasuk values('"+NoNota.getText()+"',"+
-                            "'"+KodeBarang.getSelectedItem()+"',"+
-                            "'"+Jumlah.getText()+"',"+
-                            "'"+SubTotal.getText()+"')";
-                    stt.executeUpdate(SQL);
-                    
-                    Class.forName(driver);
-                    Connection kon1 =DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-                    Statement  stt1 = kon.createStatement();
-                    String     SQL1 = "Update tblbarang Set stok=stok + '"+Jumlah.getText()+"'" +
-                            "Where kodebarang='"+KodeBarang.getSelectedItem().toString()+"'";
-                    stt1.executeUpdate(SQL1);
-                    String[] data = null;
-                    data[0] = KodeBarang.getSelectedItem().toString();
-                    data[1] = NamaBrng.getText();
-                    data[2] = HargaJual.getText();
-                    data[3] = Stok.getText();
-                    data[4] = Jumlah.getText();
-                    data[5] = SubTotal.getText();
-                    tableModel.insertRow(0, data);
-                    stt.close();
-                } 
-                KodeBarang.requestFocus(); 
-                AddItem.setEnabled(false); 
-                BersihDetail(); 
-                //TampilGrid(); 
-                KodeBarang.requestFocus(); 
-            } catch (Exception ex) { 
-                System.err.println(ex.getMessage()); 
-            } 
-        } 
+        String nonota=NoNota.getText();
+        String kbrg = KodeBarang.getSelectedItem().toString();
+        String jumlah = Jumlah.getText();
+        
+         double d, e;   
+            d = Double.parseDouble(SubTotal.getText());  
+            e = Double.parseDouble(Total.getText());  
+            e = e+d;   
+            Total.setText(String.valueOf(e));
+       
+        if ((nonota.isEmpty()) | (kbrg.isEmpty()) |(jumlah.isEmpty())) {
+            JOptionPane.showMessageDialog(null,"data tidak boleh kosong, silahkan dilengkapi");
+        }else {
+            try{
+                
+                Connection kon = koneksi.getkoneksi();
+                Statement stt = kon.createStatement();
+                String SQL = "insert into tbldetailbrgmasuk values('"+NoNota.getText()+"',"+
+                "'"+KodeBarang.getSelectedItem()+"',"+
+                "'"+Jumlah.getText()+"',"+
+                "'"+Total.getText()+"')";
+                stt.executeUpdate(SQL);
+               
+                Connection kon1 = koneksi.getkoneksi();
+                Statement stt1 = kon.createStatement();
+                String SQL1 = "Update tblbarang Set stok=stok - '"+Jumlah.getText()+"'" +
+                "Where KodeBarang='"+KodeBarang.getSelectedItem().toString()+"'";
+                stt1.executeUpdate(SQL1);
+               
+                data[0] = KodeBarang.getSelectedItem().toString();
+                data[1] = NamaBrng.getText();
+                data[2] = HargaJual.getText();
+                data[3] = Stok.getText();
+                data[4] = Jumlah.getText();
+                data[5] = Total.getText();
+                model.insertRow(0, data);
+                
+                
+        
+                KodeBarang.requestFocus();
+        
+                stt.close();
+                KodeBarang.requestFocus();
+                AddItem.setEnabled(false);
+                save.setEnabled(true);
+                BersihDetail();
+                KodeBarang.requestFocus();
+                
+            } catch(Exception ex){
+                 System.out.println("Terjadi Error"+ex.getMessage());
+            }
+        }
     }//GEN-LAST:event_AddItemActionPerformed
 
     private void AddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddNewActionPerformed
@@ -490,73 +524,97 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
     }//GEN-LAST:event_AddNewActionPerformed
 
     private void HitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HitungActionPerformed
-        // TODO add your handling code here:
-       int a; 
-       int b; 
-       double c;     
-        a = Integer.parseInt(HargaJual.getText());  
-        b = Integer.parseInt(Jumlah.getText()); 
-        c = a * b;   
-        SubTotal.setText(String.valueOf(c)); 
+
+        int a, b, c;
+        
+        a = Integer.parseInt(HargaJual.getText());
+        b = Integer.parseInt(Jumlah.getText());
+        c = a*b;
+
+        SubTotal.setText(Integer.toString(c)); 
     }//GEN-LAST:event_HitungActionPerformed
 
     private void KodeBarangItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_KodeBarangItemStateChanged
-                try {      
-        Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-        Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-        ResultSet.CONCUR_UPDATABLE); 
-        String     SQL = "SELECT * FROM tblbarang where kodebarang='"+ 
-        KodeBarang.getSelectedItem().toString()+"'"; 
-        ResultSet  res = stt.executeQuery(SQL); 
-        res.absolute(1); 
-        NamaBrng.setText(res.getString("namabarang")); 
-        HargaJual.setText(res.getString("hargajual")); 
-        Stok.setText(res.getString("stok")); 
-                } catch (SQLException ex) { 
-                } 
+                try{
+            String sql ="SELECT * FROM tblbarang WHERE KodeBarang='" + KodeBarang.getSelectedItem().toString()+"'";
+            
+            Connection c = koneksi.getkoneksi();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            r.absolute(1);
+            NamaBrng.setText(r.getString("NamaBarang"));
+            HargaJual.setText(r.getString("HargaJual"));
+            Stok.setText(r.getString("stok"));
+        }catch(SQLException ex){
+     
+        }
                  Jumlah.requestFocus(); 
                  AddItem.setEnabled(true);
     }//GEN-LAST:event_KodeBarangItemStateChanged
 
     private void SubTotalCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_SubTotalCaretUpdate
-        // TODO add your handling code here
-            double d, e;   
-            d = Double.parseDouble(SubTotal.getText());  
-            e = Double.parseDouble(Total.getText());  
-            e = e+d;   
-            Total.setText(String.valueOf(e)); 
+        
     }//GEN-LAST:event_SubTotalCaretUpdate
 
+    
     private void IdDistributorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_IdDistributorItemStateChanged
-          try {      
-        Connection kon =DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-        Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-        ResultSet.CONCUR_UPDATABLE); 
-        String     SQL = "SELECT * FROM tbldistributor where iddistributor='"+ 
-        IdDistributor.getSelectedItem().toString()+"'"; 
-        ResultSet  res = stt.executeQuery(SQL); 
-        res.absolute(1); 
-        NamaDistributor.setText(res.getString("namadistributor")); 
-        KotaAsal.setText(res.getString("kotaasal"));
-                } catch (SQLException ex) { 
-                }
+          try{
+        String sql ="SELECT * FROM tbldistributor WHERE IDDistributor='" + IdDistributor.getSelectedItem().toString()+"'";
+            
+        Connection c = koneksi.getkoneksi();
+        Statement s = c.createStatement();
+        ResultSet r = s.executeQuery(sql);
+            
+        r.absolute(1);
+        NamaDistributor.setText(r.getString("NamaDistributor"));
+        KotaAsal.setText(r.getString("KotaAsal"));
+        }catch(SQLException ex){
+     
+        }
     }//GEN-LAST:event_IdDistributorItemStateChanged
 
     private void IdPetugasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_IdPetugasItemStateChanged
         // TODO add your handling code here:
-              try {      
-                Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-                Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-                ResultSet.CONCUR_UPDATABLE); 
-                String     SQL = "SELECT * FROM tblpetugas where idpetugas='"+ 
-                IdPetugas.getSelectedItem().toString()+"'"; 
-                ResultSet  res = stt.executeQuery(SQL); 
-                res.absolute(1); 
-                NamaPetugas.setText(res.getString("namapetugas")); 
-                        } catch (SQLException ex) { 
-                        } 
+               try{
+        String sql ="SELECT * FROM tblpetugas WHERE IDPetugas='" + IdPetugas.getSelectedItem().toString()+"'";
+            
+        Connection c = koneksi.getkoneksi();
+        Statement s = c.createStatement();
+        ResultSet r = s.executeQuery(sql);
+            
+        r.absolute(1);
+        NamaPetugas.setText(r.getString("NamaPetugas"));
+        }catch(SQLException ex){
+     
+        }
     }//GEN-LAST:event_IdPetugasItemStateChanged
 
+    private void KodeBarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KodeBarangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_KodeBarangActionPerformed
+
+    private void StokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StokActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_StokActionPerformed
+
+    private void TotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TotalActionPerformed
+
+    private void kosong(){
+        NoNota.setText(null);
+        TglMasuk.setText(null);
+        NamaPetugas.setText(null);
+        NamaBrng.setText(null);
+        HargaJual.setText(null);
+        Stok.setText(null);
+        Jumlah.setText(null);
+        Total.setText(null);
+        IdDistributor.setSelectedIndex(0);
+        KodeBarang.setSelectedIndex(0);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -636,63 +694,54 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 
-    private void setDefaultTable() {
-         String stat =""; 
-        try { 
-             String driver = null;
-        Class.forName(driver); 
-             try (Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", "")) {
-                 Statement  stt = kon.createStatement();
-                 String     SQL = "SELECT tblbarang.kodebarang,tblbarang.namabarang,tblbarang.hargajual," +"tblbarang.stok,tbldetailbrgmasuk.jumlah,tbldetailbrgmasuk.subtotal,tblbrgmasuk.nonota " + "FROM tblbarang,tbldetailbrgmasuk,tblbrgmasuk WHERE  tblbarang.kodebarang=tbldetailbrgmasuk.kodebarang " +
-                         "AND tblbrgmasuk.nonota=tbldetailbrgmasuk.nonota" +
-                         "AND tbldetailbrgmasuk.nonota='"+NoNota.getText()+"'";
-                 ResultSet  res = stt.executeQuery(SQL);
-                 while(res.next()){
-                     String[] data = null;
-                     data[0] = res.getString(1);
-                     data[1] = res.getString(2);
-                     data[2] = res.getString(3);
-                     data[3] = res.getString(4);
-                     data[4] = res.getString(5);
-                     data[5] = res.getString(6);
-//                     table.addRow(data);
-                 }
-                 res.close();
-                 stt.close();
-             } 
-              } catch (Exception ex) { 
-                  System.err.println(ex.getMessage()); 
-              }
-          }
-    
-            private void TampilGridDetail(){ 
-          String stat =""; 
-          try { 
-              String driver = null;
-          Class.forName(driver); 
-              try (Connection kon =DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", "")) {
-                  Statement  stt = kon.createStatement();
-                  String     SQL = "SELECT tblbarang.kodebarang,tblbarang.namabarang,tblbarang.hargajual," + "tblbarang.stok,tbldetailbrgmasuk.jumlah,tbldetailbrgmasuk.subtotal,tblbrgmasuk.nonota " + "FROM tblbarang,tbldetailbrgmasuk,tblbrgmasuk WHERE tblbarang.kodebarang=tbldetailbrgmasuk.kodebarang " + "AND tblbrgmasuk.nonota=tbldetailbrgmasuk.nonota " +  "AND tbldetailbrgmasuk.nonota='"+NoNota.getText().toString()+"'";
-                                  ResultSet  res = stt.executeQuery(SQL);
-                                  while(res.next()){
-                                  String[] data=null;
-                                      data[0] = res.getString(1);
-                                      data[1] = res.getString(2);
-                                      data[2] = res.getString(3);
-                                      data[3] = res.getString(4);
-                                      data[4] = res.getString(5);
-                                      data[5] = res.getString(6);
-                                      tableModel.addRow(data);
-                                  }
-                                  res.close();
-                                  stt.close();
-              } 
-                } catch (Exception ex) { 
-                    System.err.println(ex.getMessage()); 
-        } 
- }
+private void loadData() {
+    model = new DefaultTableModel();
+    model.getDataVector().removeAllElements();
+    model.fireTableDataChanged();
+    table.setModel(model);
+
+    model.addColumn("Kode Barang");
+    model.addColumn("Nama Barang");
+    model.addColumn("Harga Jual");
+    model.addColumn("Stok");
+    model.addColumn("Jumlah");
+    model.addColumn("Sub Total");
+
+    try {
+        String sql = "SELECT tbldetailbrgmasuk.nonota, tbldetailbrgmasuk.KodeBarang, tbldetailbrgmasuk.Jumlah, tbldetailbrgmasuk.SubTotal, " +
+            "tblbarang.NamaBarang, tblbarang.HargaJual, tblbarang.Stok " +
+            "FROM tbldetailbrgmasuk " +
+            "INNER JOIN tblbarang ON tbldetailbrgmasuk.KodeBarang = tblbarang.KodeBarang " +
+            "WHERE tbldetailbrgmasuk.nonota = '" + NoNota.getText() + "'";
+
+        Connection kon = koneksi.getkoneksi();
+        Statement s = kon.createStatement();
+       // preparedStatement.setString(1, txtnonota.getText());
+
+        ResultSet rs = s.executeQuery(sql);
+
+        while (rs.next()) {
+            String nonota = rs.getString("nonota");
+            String kodeBarang = rs.getString("KodeBarang");
+            String namaBarang = rs.getString("NamaBarang");
+            String hargaJual = rs.getString("HargaJual");
+            String stok = rs.getString("Stok");
+            String jumlah = rs.getString("Jumlah");
+            String subtotal = rs.getString("SubTotal");
+
+            model.addRow(new Object[]{nonota, kodeBarang, namaBarang, hargaJual, stok, jumlah, subtotal});
+        }
+
+        rs.close();
+        s.close();
+       // kon.close();
+    } catch (SQLException ex) {
+        System.out.println("Terjadi Error: " + ex.getMessage());
+    }
+}
+
             public void BersihData(){ 
-                tableModel.setRowCount(0); 
+                model.setRowCount(0); 
                 NoNota.setText(""); 
                 IdDistributor.setSelectedIndex(0); 
                 NamaPetugas.setText(""); 
@@ -743,41 +792,43 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
             }
 
               public void TampilComboPetugas(){ 
-                try {      
-                Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-                Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-                ResultSet.CONCUR_UPDATABLE); 
-                String     SQL = "SELECT * FROM tblpetugas"; 
-                ResultSet  res = stt.executeQuery(SQL); 
-                while(res.next()){ 
-                IdPetugas.addItem(res.getString("idpetugas")); 
-                } 
-                } catch (SQLException ex) { 
-              } 
+                try{
+            String sql = "SELECT * FROM tblpetugas";
+            
+            Connection c = koneksi.getkoneksi();
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery(sql);
+            
+            while(r.next()){
+                IdPetugas.addItem(r.getString("IDPetugas"));
+            }
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
-              public void TampilComboDistributor(){ 
-                try {      
-                Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-                Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-                ResultSet.CONCUR_UPDATABLE); 
-                String     SQL = "SELECT * FROM tbldistributor"; 
-                ResultSet  res = stt.executeQuery(SQL); 
-                while(res.next()){ 
-                IdDistributor.addItem(res.getString("iddistributor")); 
+    public void TampilComboDistributor(){ 
+            try {      
+         String sql = "SELECT * FROM tbldistributor";
+            
+         Connection c = koneksi.getkoneksi();
+         Statement s = c.createStatement();
+         ResultSet r = s.executeQuery(sql); 
+         while(r.next()){ 
+         IdDistributor.addItem(r.getString("IDDistributor")); 
                 } 
-                        } catch (SQLException ex) { 
-                        } 
+                    } catch (SQLException ex) { 
+                    } 
                 } 
               
-             public void TampilComboBarang(){ 
-                try {      
-                Connection kon = DriverManager.getConnection("db_penjualan_barang_pas_xiia", "root", ""); 
-                Statement  stt = kon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
-                ResultSet.CONCUR_UPDATABLE); 
-                String     SQL = "SELECT * FROM tblbarang"; 
-                ResultSet  res = stt.executeQuery(SQL); 
-                while(res.next()){ 
-                KodeBarang.addItem(res.getString("kodebarang")); 
+ public void TampilComboBarang(){ 
+    try {      
+         String sql = "SELECT * FROM tblbarang";
+            
+         Connection c = koneksi.getkoneksi();
+         Statement s = c.createStatement();
+         ResultSet r = s.executeQuery(sql); 
+         while(r.next()){ 
+         KodeBarang.addItem(r.getString("KodeBarang")); 
                 } 
                     } catch (SQLException ex) { 
                     } 
@@ -800,4 +851,6 @@ public final class BarangMasuk_Ananda extends javax.swing.JFrame {
                 } 
                 };    
                 } 
+
+   
 }
