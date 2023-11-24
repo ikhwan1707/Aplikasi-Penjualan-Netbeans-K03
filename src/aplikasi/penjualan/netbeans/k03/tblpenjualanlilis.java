@@ -106,7 +106,8 @@ private DefaultTableModel model;
             ResultSet r = s.executeQuery(sql);
             
             while(r.next()){
-                cmbid.addItem(r.getString("IDPetugas"));
+                cmbid.addItem(r.getString("id_petugas"));
+                    
             }
         }catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex);
@@ -115,9 +116,9 @@ private DefaultTableModel model;
    
     private void totalbayar(){
         int a;
-        int b = 0;
+        int b;
         double c;
-        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         a = Integer.parseInt(txtharga.getText().toString());
         b = Integer.parseInt(txtjumlah.getText().toString());
         c = a * b;
@@ -129,19 +130,19 @@ private DefaultTableModel model;
     model.fireTableDataChanged();
     tbpenjualan.setModel(model);
 
-    model.addColumn("Kode Barang");
-    model.addColumn("Nama Barang");
-    model.addColumn("Harga Jual");
+    model.addColumn("KodeBarang");
+    model.addColumn("NamaBarang");
+    model.addColumn("HargaJual");
     model.addColumn("Stok");
     model.addColumn("Jumlah");
-    model.addColumn("Sub Total");
+    model.addColumn("Subtotal");
 
     try {
-        String sql = "SELECT tbldetailpenjualan.NoFaktur, tbldetailpenjualan.KodeBarang, tbldetailpenjualan.Jumlah, tbldetailpenjualan.SubTotal, " +
+        String sql = "SELECT tblditailpenjualan.NoFaktur, tblditailpenjualan.KodeBarang, tblditailpenjualan.Jumlah, tblditailpenjualan.Subtotal, " +
             "tblbarang.NamaBarang, tblbarang.HargaJual, tblbarang.Stok " +
-            "FROM tbldetailpenjualan " +
-            "INNER JOIN tblbarang ON tbldetailpenjualan.KodeBarang = tblbarang.KodeBarang " +
-            "WHERE tbldetailpenjualan.NoFaktur = '" + txtNo.getText() + "'";
+            "FROM tblditailpenjualan " +
+            "INNER JOIN tblbarang ON tblditailpenjualan.KodeBarang = tblbarang.KodeBarang " +
+            "WHERE tblditailpenjualan.NoFaktur = '" + txtNo.getText() + "'";
 
         Connection kon = koneksi.getkoneksi();
         Statement s = kon.createStatement();
@@ -156,7 +157,7 @@ private DefaultTableModel model;
             String hargaJual = rs.getString("HargaJual");
             String stok = rs.getString("Stok");
             String jumlah = rs.getString("Jumlah");
-            String subtotal = rs.getString("SubTotal");
+            String subtotal = rs.getString("Subtotal");
 
             model.addRow(new Object[]{nofak, kodeBarang, namaBarang, hargaJual, stok, jumlah, subtotal});
         }
@@ -370,7 +371,7 @@ private DefaultTableModel model;
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(txtnamabarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(txtharga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -453,6 +454,11 @@ private DefaultTableModel model;
         jLabel13.setText("Total");
 
         txttotal.setEnabled(false);
+        txttotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttotalActionPerformed(evt);
+            }
+        });
 
         txtbayar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -572,7 +578,7 @@ private DefaultTableModel model;
         } else {
             try {
                 Connection c = koneksi.getkoneksi();
-                String sql = "INSERT INTO tblpenjualan ( NoFaktur, TglPenjualan, IDPetugas, Bayar, Sisa, Total) VALUES (?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO tblpenjualan_barang ( NoFaktur, TglPenjualan, IDPetugas, Bayar, Sisa, Total) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement p = c.prepareStatement(sql);
 
                 p.setString(1, nota);
@@ -601,7 +607,7 @@ private DefaultTableModel model;
         String KB=cmbkd.getSelectedItem().toString();
         String JM=txtjumlah.getText();
         
-        totalbayar();
+       
         if ((NM.isEmpty()) | (KB.isEmpty()) |(JM.isEmpty())) {
             JOptionPane.showMessageDialog(null,"data tidak boleh kosong, silahkan dilengkapi");
         }else {
@@ -609,7 +615,7 @@ private DefaultTableModel model;
                 
                 Connection kon = koneksi.getkoneksi();
                 Statement stt = kon.createStatement();
-                String SQL = "insert into tbldetailpenjualan values('"+txtNo.getText()+"',"+
+                String SQL = "insert into tblditailpenjualan values('"+txtNo.getText()+"',"+
                 "'"+cmbkd.getSelectedItem()+"',"+
                 "'"+txtjumlah.getText()+"',"+
                 "'"+txttotal.getText()+"')";
@@ -618,7 +624,7 @@ private DefaultTableModel model;
                 Connection kon1 = koneksi.getkoneksi();
                 Statement stt1 = kon.createStatement();
                 String SQL1 = "Update tblbarang Set stok=stok - '"+txtjumlah.getText()+"'" +
-                "Where kodebarang='"+cmbkd.getSelectedItem().toString()+"'";
+                "Where KodeBarang='"+cmbkd.getSelectedItem().toString()+"'";
                 stt1.executeUpdate(SQL1);
                
                 data[0] = cmbkd.getSelectedItem().toString();
@@ -680,14 +686,14 @@ private DefaultTableModel model;
     private void cmbidItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbidItemStateChanged
         // TODO add your handling code here:
         try{
-        String sql ="SELECT * FROM tblpetugas WHERE IDPetugas='" + cmbid.getSelectedItem().toString()+"'";
+        String sql ="SELECT * FROM tblpetugas WHERE id_petugas='" + cmbid.getSelectedItem().toString()+"'";
             
         Connection c = koneksi.getkoneksi();
         Statement s = c.createStatement();
         ResultSet r = s.executeQuery(sql);
             
         r.absolute(1);
-        txtnamapetugas.setText(r.getString("NamaPetugas"));
+        txtnamapetugas.setText(r.getString("nama_petugas"));
         }catch(SQLException ex){
      
         }
@@ -734,6 +740,10 @@ private DefaultTableModel model;
     private void cmbkdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbkdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbkdActionPerformed
+
+    private void txttotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txttotalActionPerformed
 
       private void kosong(){
         txtNo.setText(null);
