@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="28fd498b-e704-4813-b866-45e0e3a75b54">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="1c1f98f8-30d2-45f2-bf13-224454e72f60"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT * FROM tblbarang;]]>
+	</queryString>
+	<field name="KodeBarang" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NamaBarang" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="KodeJenis" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="JenisBarang" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HargaNet" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="HargaJual" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Stok" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="83" splitType="Stretch">
+			<line>
+				<reportElement x="-26" y="79" width="599" height="1" uuid="2010eac2-5e0a-4446-908a-7f6ce504466d"/>
+			</line>
+			<image>
+				<reportElement x="440" y="-11" width="115" height="79" uuid="0f15bc91-1080-45dc-b851-b505c21e4986"/>
+				<imageExpression><![CDATA["C:\\Users\\RnD01\\Downloads\\logo smki.jpeg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="159" y="18" width="271" height="61" uuid="1f88f68c-9637-49bd-a09c-a2028e50ae02"/>
+				<textElement>
+					<font fontName="Arial Rounded MT Bold" size="36"/>
+				</textElement>
+				<text><![CDATA[UTAMA MART]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement x="53" y="11" width="453" height="25" uuid="21783044-bbb1-4651-8728-5acde793b41c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Rounded MT Bold" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LAPORAN DATA BARANG]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-26" y="36" width="599" height="1" uuid="da07efd5-5e93-443f-be8e-6e930035531f"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="72" height="20" uuid="ed461282-3a33-4786-a6b0-8afb5f792920"/>
+				<text><![CDATA[Kode Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="88" y="2" width="71" height="20" uuid="98301e94-b7c6-4d55-ad75-5f5298fb29c2"/>
+				<text><![CDATA[Nama Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="2" width="59" height="20" uuid="24dd31e6-dcb9-4ef7-af41-e29b26ce6091"/>
+				<text><![CDATA[Kode Jenis]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="302" y="3" width="66" height="20" uuid="5839ef8d-fae3-4e1a-a9ff-343d10c072d9"/>
+				<text><![CDATA[Jenis Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="489" y="2" width="53" height="20" uuid="370f65c4-2fac-48c6-8c12-8ff50c454309"/>
+				<text><![CDATA[Harga Jual]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-26" y="22" width="599" height="1" uuid="d851846b-1b9a-4862-8576-4638659e5753"/>
+			</line>
+			<staticText>
+				<reportElement x="400" y="3" width="59" height="20" uuid="2bb768d4-8417-4bda-95b3-6abd3926d6ca"/>
+				<text><![CDATA[HargaNet]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="202" y="12" width="74" height="20" uuid="8cdb1c4b-bad6-4bfe-b49b-8b5fb847bc4c"/>
+				<textFieldExpression><![CDATA[$F{KodeJenis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="302" y="12" width="82" height="20" uuid="2720ea57-9310-4050-9872-9bfcfe2b43df"/>
+				<textFieldExpression><![CDATA[$F{JenisBarang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="11" width="55" height="20" uuid="b0815b37-94f8-477d-bc43-4afea3725c99"/>
+				<textFieldExpression><![CDATA[$F{HargaJual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="88" y="12" width="85" height="20" uuid="46714769-2356-4624-a447-5dd2bcaa8690"/>
+				<textFieldExpression><![CDATA[$F{NamaBarang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="11" width="72" height="20" uuid="1e15aae1-4b94-48ec-9972-52053091fed6"/>
+				<textFieldExpression><![CDATA[$F{KodeBarang}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-26" y="31" width="599" height="1" uuid="19993721-12f8-42ef-9e2d-dab4bdfc05cd"/>
+			</line>
+			<textField>
+				<reportElement x="400" y="12" width="100" height="20" uuid="025669ff-571f-4d62-b656-a58f3b94b1d8"/>
+				<textFieldExpression><![CDATA[$F{HargaNet}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="32" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
